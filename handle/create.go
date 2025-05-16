@@ -2,6 +2,7 @@ package handle
 
 import (
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -15,4 +16,13 @@ func CreateAndWriteFile(fileName string, text string) error {
 	os.WriteFile(textFileName, []byte(text), 0666)
 
 	return nil
+}
+
+func FileString(fileName string) string {
+	rawTxtData, errReadFile := os.ReadFile(fileName)
+	if errReadFile != nil {
+		log.Fatal(errReadFile)
+	}
+
+	return string(rawTxtData)
 }

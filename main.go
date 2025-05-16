@@ -48,7 +48,20 @@ func initModules() {
 
 		handle.CreateAndWriteFile(fileNameIn, fileTextIn)
 	case 2:
-		handle.ReadDataFolder()
+		// add handling to create error if an existing file exists
+		allTxtFiles := handle.ReadDataFolder()
+		fileName, errSel := handle.Selection(allTxtFiles)
+		if errSel != nil {
+			fmt.Println("likely invalid selection")
+			//handle this better to go back to case2
+			initModules()
+		}
+		key := handle.EncKey(fileName)
+		fmt.Println(key)
+		//returns apropriate byte slice
+		// a, _ := os.ReadFile("next_key.txt")
+		// fmt.Println(a)
+
 	case 3:
 		fmt.Println("3")
 	case 4:
@@ -60,4 +73,9 @@ func initModules() {
 		initModules()
 	}
 
+}
+
+func tempReadKey() []byte {
+	a, _ := os.ReadFile("ok")
+	return a
 }
