@@ -56,11 +56,13 @@ func initModules() {
 			//handle this better to go back to case2
 			initModules()
 		}
-		key := handle.EncKey(fileName)
+		key, baseName := handle.EncKeyOne(fileName)
+
+		fmt.Println(fileName)
 		fmt.Println(key)
-		//returns apropriate byte slice
-		// a, _ := os.ReadFile("next_key.txt")
-		// fmt.Println(a)
+
+		encData := handle.EncProcTwo(fileName, key)
+		handle.EncWrite(encData, baseName)
 
 	case 3:
 		fmt.Println("3")
