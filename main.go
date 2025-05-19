@@ -58,15 +58,14 @@ func initModules() {
 		}
 		key, baseName := handle.EncKeyOne(fileName)
 
-		fmt.Println(fileName)
-		fmt.Println(key)
-
 		encData := handle.EncProcTwo(fileName, key)
 		handle.EncWrite(encData, baseName)
 
 	case 3:
-		fmt.Println("3")
+		fmt.Println(handle.ReadDataFolderDec())
+
 	case 4:
+
 		fmt.Println("4")
 	case 5:
 		os.Exit(3)
