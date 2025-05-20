@@ -7,43 +7,48 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"log"
 	"os"
 )
 
-func RetrieveGCM() cipher.AEAD {
-	data, _ := os.ReadFile("./data/pks/three_key")
-
-	block, errBlock := aes.NewCipher(data)
-	if errBlock != nil {
-		log.Fatal(errBlock)
-	}
-
-	gcm, errGcm := cipher.NewGCM(block)
-	if errGcm != nil {
-		log.Fatal(errGcm)
-	}
-	nonce := make([]byte, gcm.NonceSize())
-	if _, errNo := io.ReadFull(rand.Reader, nonce); errNo != nil {
-		log.Fatal(errNo)
-	}
-
-	return gcm
+func test() {
+	fmt.Println("test")
 }
 
-func DecFlow() {
+func DecText() {
 
-	gcm := RetrieveGCM()
+	key, _ := os.ReadFile("./data/pks/one")
 
-	encByte, _ := os.ReadFile("./data/enc/three_key_enc.txt")
-	data := string(encByte)
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		fmt.Println("error creating aes block cipher", err)
+		return
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		fmt.Println("error setting gcm mode", err)
+		return
+	}
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		fmt.Println("error generating the nonce ", err)
+		return
+	}
 
-	// fmt.Println(data)
+	a, _ := os.ReadFile("./data/enc/one_enc.txt")
+	enc := string(a)
 
-	decodedCipherText, _ := hex.DecodeString(data)
+	decodedCipherText, err := hex.DecodeString(enc)
+	if err != nil {
+		fmt.Println("error decoding hex", err)
+		return
+	}
 
-	decStr, _ := gcm.Open(nil, decodedCipherText[:gcm.NonceSize()], decodedCipherText[gcm.NonceSize():], nil)
+	decryptedData, err := gcm.Open(nil, decodedCipherText[:gcm.NonceSize()], decodedCipherText[gcm.NonceSize():], nil)
+	if err != nil {
+		fmt.Println("error decrypting data", err)
+		return
+	}
 
-	fmt.Println(string(decStr))
+	fmt.Println("Decrypted data:", string(decryptedData))
 
 }

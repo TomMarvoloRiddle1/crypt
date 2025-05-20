@@ -30,21 +30,13 @@ func initModules(selectionUser int) {
 	case 1:
 		pkg.CreateAndWriteFile(pkg.PromptData())
 	case 2:
-		fileName, errSel := pkg.Selection()
-		//issue here, panic: runtime error: index out of range [7] with length 3
-		if errSel != nil {
-			fmt.Println("likely invalid selection")
-			//add error handling, to return to case2
-			initModules(2)
-		}
+		fileName, _ := pkg.Selection()
 
-		key, baseName := pkg.EncKeyOne(fileName)
-
-		encData := pkg.EncProcTwo(fileName, key)
-		pkg.EncWrite(encData, baseName)
+		pkg.EntireEnc(fileName)
 
 	case 3:
-		pkg.DecFlow()
+		//broken af
+		pkg.DecText()
 
 	case 4:
 		os.Exit(3)

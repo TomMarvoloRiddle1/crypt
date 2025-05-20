@@ -13,8 +13,8 @@ import (
 	"strings"
 )
 
+// GREEN
 func Selection() (string, error) {
-
 	//hardcoded dir, BAD when I scale
 	folder, err := os.ReadDir("./data/plainText")
 	if err != nil {
@@ -44,66 +44,52 @@ func Selection() (string, error) {
 	fmt.Scan(&selectedFile)
 
 	indexList := selectedFile - 1
-	return txtFiles[indexList], nil
 
+	fileSuffix := strings.TrimSuffix(txtFiles[indexList], ".txt")
+	nameOnly := strings.TrimLeft(fileSuffix, "- ")
+
+	return nameOnly, nil
 }
 
-func EncKeyOne(fileName string) ([]byte, string) {
-	aesKey := make([]byte, 32)
+func EntireEnc(plainTextName string) {
 
-	if _, errKey := rand.Reader.Read(aesKey); errKey != nil {
-		log.Fatal(errKey)
+	originalDataName := fmt.Sprintf("./data/plainText/%s.txt", plainTextName)
+	byteDataOg, _ := os.ReadFile(originalDataName)
+	strDataOg := string(byteDataOg)
+
+	key := make([]byte, 32)
+	if _, err := rand.Reader.Read(key); err != nil {
+		fmt.Println("error generating random encryption key ", err)
+		return
 	}
 
-	fileSuffix := strings.TrimSuffix(fileName, ".txt")
-	fileNom := strings.TrimLeft(fileSuffix, "- ")
-
-	//fileName passes numbers and old string formatting
-	encKeyFile := fmt.Sprintf("./data/pks/%s_key", fileNom)
-
-	os.Create(encKeyFile)
-	//byte data written in second param
-	os.WriteFile(encKeyFile, aesKey, 0666)
-
-	// under ~/data/FILENAME_key a 32bit key is generated
-	return aesKey, encKeyFile
-
-}
-
-func EncProcTwo(fileName string, pk []byte) []byte {
-
-	textData, _ := os.ReadFile(fileName)
-
-	//pk aka privateKey used to determine Data block here
-	block, errBlock := aes.NewCipher(pk)
-	if errBlock != nil {
-		log.Fatal(errBlock)
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		fmt.Println("error creating aes block cipher", err)
+		return
 	}
-
-	gcm, errGcm := cipher.NewGCM(block)
-	if errGcm != nil {
-		log.Fatal(errGcm)
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		fmt.Println("error setting gcm mode", err)
+		return
 	}
-
 	nonce := make([]byte, gcm.NonceSize())
-	if _, errNo := io.ReadFull(rand.Reader, nonce); errNo != nil {
-		log.Fatal(errNo)
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		fmt.Println("error generating the nonce ", err)
+		return
 	}
 
-	cipherData := gcm.Seal(nonce, nonce, textData, nil)
+	ciphertext := gcm.Seal(nonce, nonce, []byte(strDataOg), nil)
+	enc := hex.EncodeToString(ciphertext)
 
-	hexString := hex.EncodeToString(cipherData)
+	// writing to pks and enc
 
-	return []byte(hexString)
+	pkDir := fmt.Sprintf("./data/pks/%s", plainTextName)
+	os.Create(pkDir)
+	os.WriteFile(pkDir, key, 0666)
 
-}
+	encDir := fmt.Sprintf("./data/enc/%s_enc.txt", plainTextName)
+	os.Create(encDir)
+	os.WriteFile(encDir, []byte(enc), 0666)
 
-func EncWrite(cipherData []byte, baseName string) {
-
-	baseNameTwo := strings.ReplaceAll(baseName, "./data/pks/", "")
-	encKeyFile := fmt.Sprintf("./data/enc/%s_enc.txt", baseNameTwo)
-
-	os.Create(encKeyFile)
-	//byte data written in second param
-	os.WriteFile(encKeyFile, cipherData, 0666)
 }
