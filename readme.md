@@ -14,9 +14,9 @@ https://gosamples.dev/zip-file/
 ├── main.go
 ├── requirements.txt
 ├── data\
-│   ├── 1\
-│   ├── 2\
-│   ├── 3\
+│   ├── dec\
+│   ├── plainText\
+│   ├── enc\
 │   └── pks\
 │       ├── x
 │       └── x
@@ -24,6 +24,7 @@ https://gosamples.dev/zip-file/
 ├── tests
 
 
-1\ contains plaintext (.txt)
-2\ contains encrypted files + where private keys stored to be read from
-3\ destinated of decrypted text
+plainText\ contains plaintext (.txt)
+enc\ contains encrypted files +
+dec\ destinated of decrypted text
+pks\ where private keys stored to be read from

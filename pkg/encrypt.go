@@ -30,11 +30,11 @@ func Selection() (string, error) {
 
 		// check only for text files
 		isTxt, _ := regexp.MatchString(".txt", availFiles)
-		if isTxt != true {
-			continue
-		} else {
+		if isTxt {
 			fmt.Println(availFiles)
 			txtFiles = append(txtFiles, currFileName)
+		} else {
+			continue
 		}
 
 	}
