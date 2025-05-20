@@ -1,12 +1,9 @@
 package main
 
 import (
-	"bufio"
-	"crypt/handle"
+	"crypt/pkg"
 	"fmt"
-	"log"
 	"os"
-	"strings"
 )
 
 func main() {
@@ -29,54 +26,30 @@ func initModules() {
 	// add "return to menus" later
 	switch selectionUser {
 	case 1:
-
-		oneSelectName := bufio.NewReader(os.Stdin)
-		fmt.Println("Enter text file name: ")
-		fileNameInRaw, errFileName := oneSelectName.ReadString('\n')
-		if errFileName != nil {
-			log.Fatal(errFileName)
-		}
-		fileNameIn := strings.TrimSpace(fileNameInRaw)
-
-		oneSelectBody := bufio.NewReader(os.Stdin)
-		fmt.Println("Enter text file info/data: ")
-		fileTextIn, errTextIn := oneSelectBody.ReadString('\n')
-		if errTextIn != nil {
-			fmt.Println("invalid entry, likely not a string or file corruption")
-			log.Fatal(errTextIn)
-		}
-
-		handle.CreateAndWriteFile(fileNameIn, fileTextIn)
+		pkg.CreateAndWriteFile(pkg.PromptData())
 	case 2:
 		// add handling to create error if an existing file exists
-		allTxtFiles := handle.ReadDataFolder()
-		fileName, errSel := handle.Selection(allTxtFiles)
+		fileName, errSel := pkg.Selection()
 		if errSel != nil {
 			fmt.Println("likely invalid selection")
-			//handle this better to go back to case2
+			//add error handling, to return to case2
 			initModules()
 		}
-		key, baseName := handle.EncKeyOne(fileName)
 
-		encData := handle.EncProcTwo(fileName, key)
-		handle.EncWrite(encData, baseName)
+		key, baseName := pkg.EncKeyOne(fileName)
+
+		encData := pkg.EncProcTwo(fileName, key)
+		pkg.EncWrite(encData, baseName)
 
 	case 3:
-		fmt.Println(handle.ReadDataFolderDec())
+		fmt.Println("3")
 
 	case 4:
-
-		fmt.Println("4")
-	case 5:
 		os.Exit(3)
+
 	default:
 		fmt.Println("invalid selection")
 		initModules()
 	}
 
-}
-
-func tempReadKey() []byte {
-	a, _ := os.ReadFile("ok")
-	return a
 }

@@ -1,4 +1,4 @@
-package handle
+package pkg
 
 import (
 	"crypto/aes"
@@ -13,12 +13,17 @@ import (
 	"strings"
 )
 
-func ReadDataFolder() []string {
+func Selection() (string, error) {
+
 	//hardcoded dir, BAD when I scale
-	dataList := checkDir("data")
+	folder, err := os.ReadDir("./data/plainText")
+	if err != nil {
+		fmt.Println("dir issue 1")
+		log.Fatal(err)
+	}
 
 	var txtFiles []string
-	for i, v := range dataList {
+	for i, v := range folder {
 		currNum := i + 1
 		availFiles := fmt.Sprintf("%d) %v", currNum, v)
 		currFileName := fmt.Sprintf("%v", v)
@@ -33,28 +38,13 @@ func ReadDataFolder() []string {
 		}
 
 	}
-	return txtFiles
-
-}
-
-func checkDir(folderName string) []os.DirEntry {
-	folder, err := os.ReadDir(folderName)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return folder
-}
-
-func Selection(fileList []string) (string, error) {
 
 	var selectedFile int
 	fmt.Println("which file would you like to encrypt?")
 	fmt.Scan(&selectedFile)
 
 	indexList := selectedFile - 1
-
-	return fileList[indexList], nil
+	return txtFiles[indexList], nil
 
 }
 
@@ -69,8 +59,8 @@ func EncKeyOne(fileName string) ([]byte, string) {
 	fileNom := strings.TrimLeft(fileSuffix, "- ")
 
 	//fileName passes numbers and old string formatting
-	encKeyFile := fmt.Sprintf("%s_key", fileNom)
-	os.Chdir("data")
+	encKeyFile := fmt.Sprintf("./data/pks/%s_key", fileNom)
+
 	os.Create(encKeyFile)
 	//byte data written in second param
 	os.WriteFile(encKeyFile, aesKey, 0666)
@@ -110,8 +100,9 @@ func EncProcTwo(fileName string, pk []byte) []byte {
 
 func EncWrite(cipherData []byte, baseName string) {
 
-	encKeyFile := fmt.Sprintf("%s_enc", baseName)
-	os.Chdir("data")
+	baseNameTwo := strings.ReplaceAll(baseName, "./data/pks/", "")
+	encKeyFile := fmt.Sprintf("./data/enc/%s_enc.txt", baseNameTwo)
+
 	os.Create(encKeyFile)
 	//byte data written in second param
 	os.WriteFile(encKeyFile, cipherData, 0666)
