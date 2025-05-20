@@ -13,7 +13,6 @@ import (
 	"strings"
 )
 
-// GREEN
 func Selection() (string, error) {
 	//hardcoded dir, BAD when I scale
 	folder, err := os.ReadDir("./data/plainText")
@@ -91,5 +90,4 @@ func EntireEnc(plainTextName string) {
 	encDir := fmt.Sprintf("./data/enc/%s_enc.txt", plainTextName)
 	os.Create(encDir)
 	os.WriteFile(encDir, []byte(enc), 0666)
-
 }

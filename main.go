@@ -31,12 +31,13 @@ func initModules(selectionUser int) {
 		pkg.CreateAndWriteFile(pkg.PromptData())
 	case 2:
 		fileName, _ := pkg.Selection()
-
 		pkg.EntireEnc(fileName)
 
 	case 3:
-		//broken af
-		pkg.DecText()
+
+		fileName, _ := pkg.SelectionDec()
+
+		pkg.DecText(fileName)
 
 	case 4:
 		os.Exit(3)
