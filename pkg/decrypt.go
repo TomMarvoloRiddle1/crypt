@@ -39,7 +39,7 @@ func SelectionDec() (string, error) {
 	}
 
 	var selectedFile int
-	fmt.Println("which file would you like to encrypt?")
+	fmt.Println("which file would you like to decrypt?")
 	fmt.Scan(&selectedFile)
 
 	indexList := selectedFile - 1
