@@ -1,12 +1,3 @@
-CURRENTLY ONLY FOR ZIP FILES
-
-
-HowToZip
-
-https://gosamples.dev/zip-file/
-
-
-
 ***HOW TO USE***
 
 ~/crypt\

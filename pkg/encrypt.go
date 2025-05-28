@@ -42,6 +42,8 @@ func Selection() (string, error) {
 	fmt.Println("which file would you like to encrypt?")
 	fmt.Scan(&selectedFile)
 
+	//add error handling for outside len of txtFiles
+
 	indexList := selectedFile - 1
 
 	fileSuffix := strings.TrimSuffix(txtFiles[indexList], ".txt")
