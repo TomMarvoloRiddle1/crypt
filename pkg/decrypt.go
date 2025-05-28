@@ -1,61 +1,43 @@
 package pkg
 
 import (
+	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/hex"
 	"fmt"
 	"io"
-	"log"
 	"os"
-	"regexp"
-	"strings"
 )
 
-func SelectionDec() (string, error) {
-	//hardcoded dir, BAD when I scale
-	folder, err := os.ReadDir("./data/enc")
-	if err != nil {
-		fmt.Println("dir issue 1")
-		log.Fatal(err)
-	}
+func TargetNameDec() (string, error) {
 
-	var txtFiles []string
-	for i, v := range folder {
-		currNum := i + 1
-		availFiles := fmt.Sprintf("%d) %v", currNum, v)
-		currFileName := fmt.Sprintf("%v", v)
+	fmt.Println("enter name of file to decrypt [without .txt]")
+	var namePlainTxt string
+	fmt.Scan(&namePlainTxt)
 
-		// check only for text files
-		isTxt, _ := regexp.MatchString(".txt", availFiles)
-		if isTxt {
-			fmt.Println(availFiles)
-			txtFiles = append(txtFiles, currFileName)
-		} else {
-			continue
-		}
-
-	}
-
-	var selectedFile int
-	fmt.Println("which file would you like to decrypt?")
-	fmt.Scan(&selectedFile)
-
-	indexList := selectedFile - 1
-
-	fileSuffix := strings.TrimSuffix(txtFiles[indexList], "_enc.txt")
-	nameOnly := strings.ReplaceAll(fileSuffix, "- ", "")
-
-	return nameOnly, nil
+	return namePlainTxt, nil
 }
 
-func DecText(target string) {
+func DecAesWithRsa() []byte {
+	//consider filepath as parameter
 
-	keyTarg := fmt.Sprintf("./data/pks/%s", target)
-	key, _ := os.ReadFile(keyTarg)
+	aesKeyEncWithRsa, _ := os.ReadFile("./aes/rsaEncAesKey")
 
-	block, err := aes.NewCipher(key)
+	priv, _ := os.ReadFile("./rsa/priv")
+
+	privStructure, _ := x509.ParsePKCS1PrivateKey(priv)
+	ogAesKey, _ := privStructure.Decrypt(nil, aesKeyEncWithRsa, &rsa.OAEPOptions{Hash: crypto.SHA256})
+
+	return ogAesKey
+}
+
+func DecText(target string, ogAesKey []byte) {
+
+	block, err := aes.NewCipher(ogAesKey)
 	if err != nil {
 		fmt.Println("error creating aes block cipher", err)
 		return
@@ -71,7 +53,8 @@ func DecText(target string) {
 		return
 	}
 
-	encTarg := fmt.Sprintf("./data/enc/%s_enc.txt", target)
+	//hybrid encrypted shit
+	encTarg := fmt.Sprintf("./aes/%s_aesEnc.txt", target)
 	encByte, _ := os.ReadFile(encTarg)
 	enc := string(encByte)
 
@@ -86,10 +69,6 @@ func DecText(target string) {
 		fmt.Println("error decrypting data", err)
 		return
 	}
-
-	decFile := fmt.Sprintf("./data/dec/%s_dec.txt", target)
-	os.Create(decFile)
-	os.WriteFile(decFile, decryptedData, 0666)
 
 	fmt.Println("Decrypted data:", string(decryptedData))
 

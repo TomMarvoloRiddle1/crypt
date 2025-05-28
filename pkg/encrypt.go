@@ -4,67 +4,53 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha256"
+	"crypto/x509"
 	"encoding/hex"
 	"fmt"
 	"io"
-	"log"
 	"os"
-	"regexp"
-	"strings"
 )
 
-func Selection() (string, error) {
-	//hardcoded dir, BAD when I scale
-	folder, err := os.ReadDir("./data/plainText")
-	if err != nil {
-		fmt.Println("dir issue 1")
-		log.Fatal(err)
-	}
+func TargetNameEnc() (string, error) {
 
-	var txtFiles []string
-	for i, v := range folder {
-		currNum := i + 1
-		availFiles := fmt.Sprintf("%d) %v", currNum, v)
-		currFileName := fmt.Sprintf("%v", v)
+	fmt.Println("enter name of file to encrypt [without .txt]")
+	var namePlainTxt string
+	fmt.Scan(&namePlainTxt)
 
-		// check only for text files
-		isTxt, _ := regexp.MatchString(".txt", availFiles)
-		if isTxt {
-			fmt.Println(availFiles)
-			txtFiles = append(txtFiles, currFileName)
-		} else {
-			continue
-		}
-
-	}
-
-	var selectedFile int
-	fmt.Println("which file would you like to encrypt?")
-	fmt.Scan(&selectedFile)
-
-	//add error handling for outside len of txtFiles
-
-	indexList := selectedFile - 1
-
-	fileSuffix := strings.TrimSuffix(txtFiles[indexList], ".txt")
-	nameOnly := strings.TrimLeft(fileSuffix, "- ")
-
-	return nameOnly, nil
+	return namePlainTxt, nil
 }
 
-func EntireEnc(plainTextName string) {
+func RsaEnc(data []byte) []byte {
+
+	pubByte, _ := os.ReadFile("./rsa/pub")
+
+	pubStructure, _ := x509.ParsePKCS1PublicKey(pubByte)
+
+	rsaEncByte, _ := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubStructure, data, nil)
+
+	return rsaEncByte
+
+}
+
+func AesKey() []byte {
+	key := make([]byte, 32)
+	if _, err := rand.Reader.Read(key); err != nil {
+		fmt.Println("error generating random encryption key ", err)
+	}
+	return key
+}
+
+func AesEnc(plainTextName string, aesKey []byte) {
 
 	originalDataName := fmt.Sprintf("./data/plainText/%s.txt", plainTextName)
 	byteDataOg, _ := os.ReadFile(originalDataName)
 	strDataOg := string(byteDataOg)
 
-	key := make([]byte, 32)
-	if _, err := rand.Reader.Read(key); err != nil {
-		fmt.Println("error generating random encryption key ", err)
-		return
-	}
+	//crucial to be passed
 
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(aesKey)
 	if err != nil {
 		fmt.Println("error creating aes block cipher", err)
 		return
@@ -83,13 +69,7 @@ func EntireEnc(plainTextName string) {
 	ciphertext := gcm.Seal(nonce, nonce, []byte(strDataOg), nil)
 	enc := hex.EncodeToString(ciphertext)
 
-	// writing to pks and enc
-
-	pkDir := fmt.Sprintf("./data/pks/%s", plainTextName)
-	os.Create(pkDir)
-	os.WriteFile(pkDir, key, 0666)
-
-	encDir := fmt.Sprintf("./data/enc/%s_enc.txt", plainTextName)
+	encDir := fmt.Sprintf("./aes/%s_aesEnc.txt", plainTextName)
 	os.Create(encDir)
 	os.WriteFile(encDir, []byte(enc), 0666)
 }
