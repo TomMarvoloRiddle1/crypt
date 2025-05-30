@@ -41,7 +41,7 @@ func initModules(selectionUser int) {
 
 		//rsa pub key encrypts the OG sym AES key
 		rsaEncAesKey := pkg.RsaEnc(symmetricKey)
-		os.WriteFile("./aes/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
+		os.WriteFile("./data/aes/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
 
 		pkg.AesEnc(readPlainTxt, symmetricKey)
 
@@ -62,8 +62,8 @@ func initModules(selectionUser int) {
 
 		pubKeyByte := x509.MarshalPKCS1PublicKey(&pubK)
 		privKeyByte := x509.MarshalPKCS1PrivateKey(privK)
-		os.WriteFile("./rsa/priv", privKeyByte, 0666)
-		os.WriteFile("./rsa/pub", pubKeyByte, 0666)
+		os.WriteFile("./data/rsa/priv", privKeyByte, 0666)
+		os.WriteFile("./data/rsa/pub", pubKeyByte, 0666)
 
 	case 4:
 		os.Exit(3)

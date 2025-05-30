@@ -24,7 +24,7 @@ func TargetNameEnc() (string, error) {
 
 func RsaEnc(data []byte) []byte {
 
-	pubByte, _ := os.ReadFile("./rsa/pub")
+	pubByte, _ := os.ReadFile("./data/rsa/pub")
 
 	pubStructure, _ := x509.ParsePKCS1PublicKey(pubByte)
 
@@ -69,7 +69,7 @@ func AesEnc(plainTextName string, aesKey []byte) {
 	ciphertext := gcm.Seal(nonce, nonce, []byte(strDataOg), nil)
 	enc := hex.EncodeToString(ciphertext)
 
-	encDir := fmt.Sprintf("./aes/%s_aesEnc.txt", plainTextName)
+	encDir := fmt.Sprintf("./data/aes/%s_aesEnc.txt", plainTextName)
 	os.Create(encDir)
 	os.WriteFile(encDir, []byte(enc), 0666)
 }

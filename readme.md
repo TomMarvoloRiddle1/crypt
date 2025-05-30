@@ -1,21 +1,25 @@
 ***HOW TO USE***
 
-~/crypt\
-├── README.md
+crypt/
+├── internal/
+│   └── app/
+│       └── myapp.go # Core application logic
+│   └── data/ #encryption storage
+│       └──aes
+│       └──plainText
+│       └──rsa
+├── pkg/ #reusable functions
+│   └── somepkg/
+│       └── somepkg.go # Reusable functions
+├── .gitignore
+├── go.mod
 ├── main.go
-├── requirements.txt
-├── data\
-│   ├── dec\
-│   ├── plainText\
-│   ├── enc\
-│   └── pks\
-│       ├── x
-│       └── x
-├── tests
-├── tests
-
+├── README.md
 
 plainText\ contains plaintext (.txt)
 enc\ contains encrypted files +
 dec\ destinated of decrypted text
 pks\ where private keys stored to be read from
+
+
+./data/aes
