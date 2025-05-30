@@ -22,4 +22,9 @@ dec\ destinated of decrypted text
 pks\ where private keys stored to be read from
 
 
-./data/aes
+build native:
+go build -trimpath -o crypt main.go
+build win:
+GOOS=windows GOARCH=amd64 go build -trimpath -o crypt.exe main.go
+build mac:
+GOOS=darwin GOARCH=arm64 go build -trimpath -o crypt main.go

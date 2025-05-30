@@ -1,6 +1,8 @@
 package pkg
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func NameInput(mode string) (string, error) {
 	//this function can be replaced for os.Args later on anyways

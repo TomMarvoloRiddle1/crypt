@@ -2,45 +2,28 @@ package main
 
 import (
 	"crypt/internal"
-	"fmt"
 	"os"
 )
 
 func main() {
-	initModules(initSelect())
-}
 
-func initSelect() int {
-	selectionOpt := `
-1) Encrypt text file
-2) Decrypt text file
-3) Create RSA keypair
-4) Exit program`
-	fmt.Println(selectionOpt)
-	var selectionUser int
-	fmt.Scan(&selectionUser)
-	return selectionUser
-}
+	cliArg := os.Args
 
-func initModules(selectionUser int) {
+	var inputs []string
+	for _, v := range cliArg {
+		inputs = append(inputs, v)
+	}
 
-	switch selectionUser {
-	case 1:
-		internal.ModOne()
+	//inputs[0] always == name of ./PROGRAMNAME
+	mode := inputs[1]
 
-	case 2:
-
-		internal.ModTwo()
-
-	case 3:
+	switch mode {
+	case "genrsa":
 		internal.ModThree()
-
-	case 4:
-		os.Exit(3)
-
-	default:
-		fmt.Println("invalid selection")
-		initModules(initSelect())
+	case "decrypt":
+		internal.ModTwo()
+	case "encrypt":
+		internal.ModOne()
 	}
 
 }
