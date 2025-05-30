@@ -13,15 +13,6 @@ import (
 	"os"
 )
 
-func TargetNameEnc() (string, error) {
-
-	fmt.Println("enter name of file to encrypt [without .txt]")
-	var namePlainTxt string
-	fmt.Scan(&namePlainTxt)
-
-	return namePlainTxt, nil
-}
-
 func RsaEnc(data []byte) []byte {
 
 	pubByte, _ := os.ReadFile("./data/rsa/pub")

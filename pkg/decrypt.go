@@ -13,15 +13,6 @@ import (
 	"os"
 )
 
-func TargetNameDec() (string, error) {
-
-	fmt.Println("enter name of file to decrypt [without .txt]")
-	var namePlainTxt string
-	fmt.Scan(&namePlainTxt)
-
-	return namePlainTxt, nil
-}
-
 func DecAesWithRsa() []byte {
 	//consider filepath as parameter
 
