@@ -16,14 +16,16 @@ func main() {
 
 	//inputs[0] always == name of ./PROGRAMNAME
 	mode := inputs[1]
+	fileName := inputs[2]
 
 	switch mode {
 	case "genrsa":
-		internal.ModThree()
-	case "decrypt":
-		internal.ModTwo()
+		internal.GenRsa()
 	case "encrypt":
-		internal.ModOne()
+		internal.Encrypt(fileName)
+	case "decrypt":
+		internal.Decrypt(fileName)
+
 	}
 
 }
