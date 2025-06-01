@@ -9,21 +9,16 @@ func main() {
 
 	cliArg := os.Args
 
-	var inputs []string
-	for _, v := range cliArg {
-		inputs = append(inputs, v)
-	}
-
-	//inputs[0] always == name of ./PROGRAMNAME
-	mode := inputs[1]
-	fileName := inputs[2]
+	mode := cliArg[1]
 
 	switch mode {
 	case "genrsa":
 		internal.GenRsa()
 	case "encrypt":
+		fileName := cliArg[2]
 		internal.Encrypt(fileName)
 	case "decrypt":
+		fileName := cliArg[2]
 		internal.Decrypt(fileName)
 
 	}
