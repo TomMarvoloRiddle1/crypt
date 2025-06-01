@@ -1,7 +1,8 @@
 package main
 
 import (
-	"crypt/internal"
+	"crypt/internal/appFlow"
+	"fmt"
 	"os"
 )
 
@@ -12,15 +13,18 @@ func main() {
 	mode := cliArg[1]
 
 	switch mode {
+	case "help":
+		fmt.Println("gonna add this bitch later")
 	case "genrsa":
-		internal.GenRsa()
+		appFlow.GenRsa()
 	case "encrypt":
 		fileName := cliArg[2]
-		internal.Encrypt(fileName)
+		appFlow.Encrypt(fileName)
 	case "decrypt":
 		fileName := cliArg[2]
-		internal.Decrypt(fileName)
-
+		appFlow.Decrypt(fileName)
+	default:
+		fmt.Println("invalid selection")
 	}
 
 }

@@ -1,7 +1,8 @@
-package internal
+package appFlow
 
 import (
-	"crypt/pkg"
+	"crypt/internal/decryption"
+	"crypt/internal/encryption"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -24,18 +25,18 @@ func GenRsa() {
 
 func Encrypt(fileName string) {
 
-	symmetricKey := pkg.AesKey()
+	symmetricKey := encryption.AesKey()
 
 	//rsa pub key encrypts the OG sym AES key
-	rsaEncAesKey := pkg.RsaEnc(symmetricKey)
+	rsaEncAesKey := encryption.RsaEnc(symmetricKey)
 	os.WriteFile("./data/aes/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
 
-	pkg.AesEnc(fileName, symmetricKey)
+	encryption.AesEnc(fileName, symmetricKey)
 }
 
 func Decrypt(fileName string) {
 
-	ogAesKey := pkg.DecAesWithRsa()
+	ogAesKey := decryption.DecAesWithRsa()
 
-	pkg.DecText(fileName, ogAesKey)
+	decryption.DecText(fileName, ogAesKey)
 }
