@@ -23,6 +23,10 @@ func main() {
 	case "decrypt":
 		fileName := cliArg[2]
 		appFlow.Decrypt(fileName)
+	case "zip":
+		folderName := cliArg[2]
+		appFlow.Zip(folderName)
+
 	default:
 		fmt.Println("invalid selection")
 	}

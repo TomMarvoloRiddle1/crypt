@@ -3,9 +3,11 @@ package appFlow
 import (
 	"crypt/internal/decryption"
 	"crypt/internal/encryption"
+	"crypt/internal/zipping"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
+	"fmt"
 	"log"
 	"os"
 )
@@ -39,4 +41,13 @@ func Decrypt(fileName string) {
 	ogAesKey := decryption.DecAesWithRsa()
 
 	decryption.DecText(fileName, ogAesKey)
+}
+
+func Zip(folderName string) {
+
+	originFolder := fmt.Sprintf("./data/imports/folders/%s", folderName)
+	exportedZip := fmt.Sprintf("./data/exports/foldersZipped/%s", folderName)
+
+	zipping.ZipTargetFolder(originFolder, exportedZip)
+
 }

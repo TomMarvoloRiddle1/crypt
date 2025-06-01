@@ -2,6 +2,11 @@
 
 crypt/
 ├── data/ #encryption storage
+│    └── app/
+│       └── main.go #entry point, where program is build from
+├── data/ #user resources, must make directories yourself
+│    └──exports
+│    └──imports
 │    └──aes
 │    └──plainText
 │    └──rsa
@@ -44,4 +49,4 @@ lots of hardcoded logic like rsaEncAesKey in aes (the encrypted AES key via rsaP
 make dynamic naming of keys to handle more files, rn just a MVP to streamline logic
 - zero streamlining inside encrypt decrypt modules, also alot of omitted error handling bcoz lazy (but some of it is truly unnecessary)
 
-FEATURE IPR> figure out how zipping folders works
+>> could storing the keys in a .json be more efficient?
