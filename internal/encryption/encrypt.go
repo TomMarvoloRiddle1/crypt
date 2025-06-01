@@ -15,7 +15,7 @@ import (
 
 func RsaEnc(data []byte) []byte {
 
-	pubByte, _ := os.ReadFile("./data/rsa/pub")
+	pubByte, _ := os.ReadFile("./data/keys/rsa/pub")
 
 	pubStructure, _ := x509.ParsePKCS1PublicKey(pubByte)
 
@@ -35,7 +35,7 @@ func AesKey() []byte {
 
 func AesEnc(plainTextName string, aesKey []byte) {
 
-	originalDataName := fmt.Sprintf("./data/plainText/%s.txt", plainTextName)
+	originalDataName := fmt.Sprintf("./data/imports/files/%s.txt", plainTextName)
 	byteDataOg, _ := os.ReadFile(originalDataName)
 	strDataOg := string(byteDataOg)
 
@@ -60,7 +60,7 @@ func AesEnc(plainTextName string, aesKey []byte) {
 	ciphertext := gcm.Seal(nonce, nonce, []byte(strDataOg), nil)
 	enc := hex.EncodeToString(ciphertext)
 
-	encDir := fmt.Sprintf("./data/aes/%s_aesEnc.txt", plainTextName)
+	encDir := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc.txt", plainTextName)
 	os.Create(encDir)
 	os.WriteFile(encDir, []byte(enc), 0666)
 }

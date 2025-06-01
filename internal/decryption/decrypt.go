@@ -16,9 +16,9 @@ import (
 func DecAesWithRsa() []byte {
 	//consider filepath as parameter
 
-	aesKeyEncWithRsa, _ := os.ReadFile("./data/aes/rsaEncAesKey")
+	aesKeyEncWithRsa, _ := os.ReadFile("./data/keys/aes_enc/rsaEncAesKey")
 
-	priv, _ := os.ReadFile("./data/rsa/priv")
+	priv, _ := os.ReadFile("./data/keys/rsa/priv")
 
 	privStructure, _ := x509.ParsePKCS1PrivateKey(priv)
 	ogAesKey, _ := privStructure.Decrypt(nil, aesKeyEncWithRsa, &rsa.OAEPOptions{Hash: crypto.SHA256})
@@ -45,7 +45,7 @@ func DecText(target string, ogAesKey []byte) {
 	}
 
 	//hybrid encrypted shit
-	encTarg := fmt.Sprintf("./data/aes/%s_aesEnc.txt", target)
+	encTarg := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc.txt", target)
 	encByte, _ := os.ReadFile(encTarg)
 	enc := string(encByte)
 

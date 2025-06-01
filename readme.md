@@ -1,5 +1,4 @@
-***HOW TO USE***
-
+```text
 crypt/
 ├── data/ #encryption storage
 │    └── app/

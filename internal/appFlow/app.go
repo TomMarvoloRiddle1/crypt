@@ -21,8 +21,8 @@ func GenRsa() {
 
 	pubKeyByte := x509.MarshalPKCS1PublicKey(&pubK)
 	privKeyByte := x509.MarshalPKCS1PrivateKey(privK)
-	os.WriteFile("./data/rsa/priv", privKeyByte, 0666)
-	os.WriteFile("./data/rsa/pub", pubKeyByte, 0666)
+	os.WriteFile("./data/keys/rsa/priv", privKeyByte, 0666)
+	os.WriteFile("./data/keys/rsa/pub", pubKeyByte, 0666)
 }
 
 func Encrypt(fileName string) {
@@ -31,7 +31,7 @@ func Encrypt(fileName string) {
 
 	//rsa pub key encrypts the OG sym AES key
 	rsaEncAesKey := encryption.RsaEnc(symmetricKey)
-	os.WriteFile("./data/aes/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
+	os.WriteFile("./data/keys/aes_enc/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
 
 	encryption.AesEnc(fileName, symmetricKey)
 }
