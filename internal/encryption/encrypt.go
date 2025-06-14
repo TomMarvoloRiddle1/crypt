@@ -33,10 +33,9 @@ func AesKey() []byte {
 	return key
 }
 
-func AesEnc(plainTextName string, aesKey []byte) {
+func AesEnc(plainTextName string, aesKey []byte, srcPath string) {
 
-	originalDataName := fmt.Sprintf("./data/imports/files/%s", plainTextName)
-	byteDataOg, _ := os.ReadFile(originalDataName)
+	byteDataOg, _ := os.ReadFile(srcPath)
 	strDataOg := string(byteDataOg)
 
 	//crucial to be passed

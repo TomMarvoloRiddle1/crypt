@@ -26,7 +26,7 @@ func DecAesWithRsa() []byte {
 	return ogAesKey
 }
 
-func DecText(target string, ogAesKey []byte) {
+func DecText(target string, ogAesKey []byte, srcPath string) {
 
 	block, err := aes.NewCipher(ogAesKey)
 	if err != nil {
@@ -45,8 +45,8 @@ func DecText(target string, ogAesKey []byte) {
 	}
 
 	//hybrid encrypted shit
-	encTarg := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc", target) //here!!!
-	encByte, _ := os.ReadFile(encTarg)
+
+	encByte, _ := os.ReadFile(srcPath)
 	enc := string(encByte)
 
 	decodedCipherText, err := hex.DecodeString(enc)

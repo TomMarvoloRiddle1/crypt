@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 )
 
 func GenRsa() {
@@ -33,14 +34,24 @@ func Encrypt(fileName string) {
 	rsaEncAesKey := encryption.RsaEnc(symmetricKey)
 	os.WriteFile("./data/keys/aes_enc/rsaEncAesKey", rsaEncAesKey, 0666) //reverse this key for decryption, get symmetricKey
 
-	encryption.AesEnc(fileName, symmetricKey)
+	isZip, _ := regexp.MatchString(".zip", fileName)
+	if isZip {
+		srcPathZip := fmt.Sprintf("./data/exports/foldersZipped/%s", fileName)
+		encryption.AesEnc(fileName, symmetricKey, srcPathZip)
+	} else {
+		srcPath := fmt.Sprintf("./data/imports/files/%s", fileName)
+		encryption.AesEnc(fileName, symmetricKey, srcPath)
+	}
+
 }
 
 func Decrypt(fileName string) {
 
 	ogAesKey := decryption.DecAesWithRsa()
 
-	decryption.DecText(fileName, ogAesKey)
+	srcPath := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc", fileName)
+	decryption.DecText(fileName, ogAesKey, srcPath)
+
 }
 
 func Zip(folderName string) {
