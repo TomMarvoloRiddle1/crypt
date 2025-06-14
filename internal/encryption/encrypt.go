@@ -35,7 +35,7 @@ func AesKey() []byte {
 
 func AesEnc(plainTextName string, aesKey []byte) {
 
-	originalDataName := fmt.Sprintf("./data/imports/files/%s.txt", plainTextName)
+	originalDataName := fmt.Sprintf("./data/imports/files/%s", plainTextName)
 	byteDataOg, _ := os.ReadFile(originalDataName)
 	strDataOg := string(byteDataOg)
 
@@ -60,7 +60,7 @@ func AesEnc(plainTextName string, aesKey []byte) {
 	ciphertext := gcm.Seal(nonce, nonce, []byte(strDataOg), nil)
 	enc := hex.EncodeToString(ciphertext)
 
-	encDir := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc.txt", plainTextName)
+	encDir := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc", plainTextName) //here!!!
 	os.Create(encDir)
 	os.WriteFile(encDir, []byte(enc), 0666)
 }

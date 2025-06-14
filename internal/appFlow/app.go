@@ -46,7 +46,7 @@ func Decrypt(fileName string) {
 func Zip(folderName string) {
 
 	originFolder := fmt.Sprintf("./data/imports/folders/%s", folderName)
-	exportedZip := fmt.Sprintf("./data/exports/foldersZipped/%s", folderName)
+	exportedZip := fmt.Sprintf("./data/exports/foldersZipped/%s.zip", folderName)
 
 	zipping.ZipTargetFolder(originFolder, exportedZip)
 

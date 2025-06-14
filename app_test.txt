@@ -1,0 +1,14 @@
+package main
+
+import (
+	"crypt/internal/appFlow"
+	"testing"
+)
+
+func testFileName(t *testing.T) {
+	fileName := appFlow.Encrypt("test.txt")
+
+	if fileName != "test.txt" {
+		t.Error(fileName)
+	}
+}

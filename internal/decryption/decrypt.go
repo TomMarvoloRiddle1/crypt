@@ -45,7 +45,7 @@ func DecText(target string, ogAesKey []byte) {
 	}
 
 	//hybrid encrypted shit
-	encTarg := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc.txt", target)
+	encTarg := fmt.Sprintf("./data/exports/encrypted/%s_aesEnc", target) //here!!!
 	encByte, _ := os.ReadFile(encTarg)
 	enc := string(encByte)
 
@@ -62,5 +62,8 @@ func DecText(target string, ogAesKey []byte) {
 	}
 
 	fmt.Println("Decrypted data:", string(decryptedData))
+
+	decryptedFileName := fmt.Sprintf("./data/exports/decrypted/%s", target)
+	os.WriteFile(decryptedFileName, decryptedData, 0666)
 
 }
